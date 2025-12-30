@@ -38,22 +38,26 @@ dnf5 remove -y \
 echo "GNOME desktop removed"
 echo "::endgroup::"
 
+echo "::group:: Remove Plasma Desktop"
+
+# remove image packages
+dnf5 remove -y      \
+    plasma-*        \
+    kde-*           \
+    sddm*           \
+    gnome-*         \
+    gdm             \
+    firefox         \
+    nheko           \
+    nwg-*
+
+echo "Plasma Desktop removed"
+echo "::endgroup::"
+
 echo "::group:: Install COSMIC Desktop"
 
-# Install COSMIC desktop from System76's COPR
-# Using isolated pattern to prevent COPR from persisting
-copr_install_isolated "ryanabx/cosmic-epoch" \
-    cosmic-session \
-    cosmic-greeter \
-    cosmic-comp \
-    cosmic-panel \
-    cosmic-launcher \
-    cosmic-applets \
-    cosmic-settings \
-    cosmic-files \
-    cosmic-edit \
-    cosmic-term \
-    cosmic-workspaces
+# Install COSMIC desktop from System76's
+dnf5 group install -y cosmic-desktop-environment --exclude=libreoffice*,thunderbird,firefox,pipewire*
 
 echo "COSMIC desktop installed successfully"
 echo "::endgroup::"
@@ -64,15 +68,15 @@ echo "::group:: Configure Display Manager"
 systemctl enable cosmic-greeter
 
 # Set COSMIC as default session
-mkdir -p /etc/X11/sessions
-cat > /etc/X11/sessions/cosmic.desktop << 'COSMICDESKTOP'
-[Desktop Entry]
-Name=COSMIC
-Comment=COSMIC Desktop Environment
-Exec=cosmic-session
-Type=Application
-DesktopNames=COSMIC
-COSMICDESKTOP
+# mkdir -p /etc/X11/sessions
+# cat > /etc/X11/sessions/cosmic.desktop << 'COSMICDESKTOP'
+# [Desktop Entry]
+# Name=COSMIC
+# Comment=COSMIC Desktop Environment
+# Exec=cosmic-session
+# Type=Application
+# DesktopNames=COSMIC
+# COSMICDESKTOP
 
 echo "Display manager configured"
 echo "::endgroup::"
@@ -81,8 +85,6 @@ echo "::group:: Install Additional Utilities"
 
 # Install additional utilities that work well with COSMIC
 dnf5 install -y \
-    kitty \
-    flatpak \
     xdg-desktop-portal-cosmic
 
 echo "Additional utilities installed"

@@ -16,12 +16,12 @@ source /ctx/build/copr-helpers.sh
 echo "::group:: Copy Custom Files"
 
 # Copy Brewfiles to standard location
-mkdir -p /usr/share/ublue-os/homebrew/
-cp /ctx/custom/brew/*.Brewfile /usr/share/ublue-os/homebrew/
-
-# Consolidate Just Files
-mkdir -p /usr/share/ublue-os/just/
-find /ctx/custom/ujust -iname '*.just' -exec printf "\n\n" \; -exec cat {} \; >> /usr/share/ublue-os/just/60-custom.just
+# mkdir -p /usr/share/ublue-os/homebrew/
+# cp /ctx/custom/brew/*.Brewfile /usr/share/ublue-os/homebrew/
+#
+# # Consolidate Just Files
+# mkdir -p /usr/share/ublue-os/just/
+# find /ctx/custom/ujust -iname '*.just' -exec printf "\n\n" \; -exec cat {} \; >> /usr/share/ublue-os/just/60-custom.just
 
 # Copy Flatpak preinstall files
 mkdir -p /etc/flatpak/preinstall.d/
@@ -36,6 +36,24 @@ echo "::group:: Install Packages"
 
 # Example using COPR with isolated pattern:
 # copr_install_isolated "ublue-os/staging" package-name
+
+dnf5 install -y             \
+    tmux                    \
+    util-linux              \
+    chezmoi                 \
+    neovim                  \
+    btop                    \
+    zsh                     \
+    virt-viewer             \
+    zsh-autosuggestions     \
+    zsh-syntax-highlighting \
+    steam                   \
+    mangohud                \
+    gamescope
+
+# install noisetorch
+copr_install_isolated "lochnair/NoiseTorch" \
+    noisetorch
 
 echo "::endgroup::"
 
